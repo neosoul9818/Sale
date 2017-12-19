@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mapper.OrderMapper">
+
+	<!-- void insert_order(Map<String, Object> map); -->
+	<insert id="insert_order" parameterType="map"
+	useGeneratedKeys="true" keyColumn="id" keyProperty="order.id">
+		INSERT INTO t_mall_order (
+		shhr,
+		zje,
+		jdh,
+		yh_id,
+		dzh_id,
+		dzh_mch
+		)
+		VALUES
+		(#{order.shhr},#{order.zje},#{order.jdh},#{order.yh_id},#{address.id},#{address.yh_dz})
+	</insert>
+	
+	<!-- void insert_flow(Map<String, Object> map2); -->
+	
+	<insert id="insert_flow" parameterType="map"
+	useGeneratedKeys="true" keyColumn="id" keyProperty="flow.id">
+		INSERT INTO t_mall_flow (
+		psfsh,
+		yh_id,
+		dd_id,
+		mqdd
+
+		)
+		VALUES
+			(#{flow.psfsh},#{flow.yh_id},#{order_id},#{flow.mqdd})
+	</insert>
+	<!-- void insert_order_info(Map<String, Object> map3);-->
+	 <!--  mysql批量添加的sql语句：INSERT INTO t_table (,,,) VALUES (,,,),(,,,),(,,,)..... -->
+	<insert id="insert_order_info" parameterType="map">
+		INSERT INTO t_mall_order_info (dd_id,sku_id,sku_mch,shp_tp,sku_jg,sku_shl,sku_kcdz,flow_id,gwch_id)
+		 VALUES 
+		<foreach collection="list_info"  separator="," item="info">
+			(
+			#{order_id},
+			#{info.sku_id},#{info.sku_mch},#{info.shp_tp},#{info.sku_jg},
+			#{info.sku_shl},#{info.sku_kcdz},
+			#{flow_id},
+			#{info.gwch_id}
+			)
+		</foreach>
+	</insert>
+	<!-- void delete_shoppingcarlist_by_gwcid(List<Integer> list_gwc_id); -->
+	<delete id="delete_shoppingcarlist_by_gwcid" parameterType="int">
+		DELETE FROM t_mall_shoppingcar WHERE id IN
+		<foreach collection="list" item="gwc_id" open="(" separator="," close=")">
+			#{gwc_id}
+		</foreach>
+	</delete>
+	<!-- 更新进度号和yjsdshj -->
+	<!-- void update_order(OBJECT_T_MALL_ORDER order); -->
+	<update id="update_order">
+		UPDATE t_mall_order
+		<set>
+			<if test="#{jdh!=null}">
+				jdh= #{jdh},
+			</if>
+			<if test="#{yjsdshj!=null}">
+				yjsdshj=#{yjsdshj}
+			</if>
+		</set>
+	</update>
+	<!-- 数据库生成物流flow，没有psshj配送时间，psmsh配送描述，yhid，mdd，ywy业务员，lxfsh业务员联系方式 -->
+	<!-- void update_flow(OBJECT_T_MALL_FLOW flow); -->
+	<update id="update_flow">
+		UPDATE t_mall_flow
+		SET psshj = #{psshj} ,
+		psmsh = #{psmsh},
+		yh_id = #{yh_id},
+		mdd = #{mdd},
+		ywy = #{ywy},
+		lxfsh = #{lxfsh}
+		WHERE
+			id = #{id}
+	</update>
+	<!-- int sku_shl, int kc ,sku_xl ,sku_id-->
+	<!-- void update_kc(Map<String, Integer> map); -->
+	<update id="update_kc">
+		UPDATE t_mall_sku SET kc = kc - #{sku_shl},sku_xl = sku_xl + #{sku_xl} WHERE id = #{sku_id}
+	</update>
+	
+	<!-- select for update -->
+	<!-- int select_sku_kc_by_skuid(int sku_id); -->
+	<select id="select_sku_kc_by_skuid" resultType="int">
+	SELECT kc FROM t_mall_sku WHERE id = #{sku_id} FOR UPDATE
+	</select>
+	
+	<!-- OBJECT_T_MALL_ORDER select_order_by_id(Integer id); -->
+	<select id="select_order_by_id" resultType="com.atguigu.bean.OBJECT_T_MALL_ORDER">
+		SELECT * FROM t_mall_order WHERE id = #{id}
+	</select>
+</mapper>

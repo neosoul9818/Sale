@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mapper.LoginMapper">
+
+	<insert id="regist">
+		INSERT INTO t_mall_user_account(yh_mch, yh_nch,yh_mm,yh_xm, yh_shjh, yh_yx, yh_tx) 
+		VALUES(#{yh_mch}, #{yh_nch}, #{yh_mm}, #{yh_xm}, #{yh_shjh}, #{yh_yx}, #{yh_tx});
+	</insert>
+	
+	<select id="getUser_Account" resultType="com.atguigu.bean.T_MALL_USER_ACCOUNT">
+		SELECT * FROM t_mall_user_account WHERE yh_mm=#{yh_mm} AND yh_mch = #{yh_mch}
+	</select>
+</mapper>

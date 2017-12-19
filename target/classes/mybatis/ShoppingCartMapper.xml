@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.mapper.ShoppingCartMapper">
+
+<!--  void delete_cart_by_id(int id);-->
+<delete id="delete_cart_by_id">
+	DELETE FROM t_mall_shoppingcar WHERE id=#{id}
+</delete>
+<!--  int if_cart_exist(Map<Object, Object> map);-->
+	<select id="if_cart_exist" resultType="int" >
+		SELECT COUNT(*) FROM t_mall_shoppingcar WHERE yh_id = #{yh_id} AND sku_id =#{sku_id}
+	</select>
+	
+<!-- 	List<T_MALL_SHOPPINGCAR> select_cart_list_by_userid(T_MALL_USER_ACCOUNT user); -->
+	<select id="select_cart_list_by_userid"  resultType="com.atguigu.bean.T_MALL_SHOPPINGCAR">
+		SELECT * FROM t_mall_shoppingcar WHERE yh_id =#{id}
+	</select>
+	
+<!-- 	void insert_cart(T_MALL_SHOPPINGCAR cart); -->
+	<insert id="insert_cart" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+		insert into
+		t_mall_shoppingCar(
+		sku_mch,
+		sku_jg,
+		tjshl,
+		hj,
+		yh_id,
+		shp_id,
+		sku_id,
+		shp_tp,
+		kcdz
+		)
+		values
+		(
+		#{sku_mch},
+		#{sku_jg},
+		#{tjshl},
+		#{hj},
+		#{yh_id},
+		#{shp_id},
+		#{sku_id},
+		#{shp_tp},
+		#{kcdz}
+		)
+	</insert>
+<!-- 	void update_cart(T_MALL_SHOPPINGCAR cart); -->
+	<update id="update_cart">
+		UPDATE t_mall_shoppingcar 
+		<set>
+			<if test="#{tjshl} !=null">
+				tjshl = #{tjshl},
+			</if>
+			<if test="#{hj} !=null">
+				hj=#{hj},
+			</if>
+			<if test="#{shfxz} !=null">
+				shfxz = #{shfxz}
+			</if>
+		</set>
+		WHERE yh_id =#{yh_id}
+		AND sku_id =#{sku_id}
+	</update>
+	
+</mapper>

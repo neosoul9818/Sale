@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<properties resource="db.properties" />
+
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<!-- property配置连接池的每一个属性，官方文档中也指示了还能配置哪些属性 -->
+				<!-- ${}从全局属性中获取值 -->
+				<property name="driver" value="${jdbc.driver}" />
+				<property name="url" value="${jdbc.url}" />
+				<property name="username" value="${jdbc.username}" />
+				<property name="password" value="${jdbc.password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	<!-- 写好Mapper一定别忘了注册 -->
+
+	<!-- 4、mappers映射器。作用：给全局配置文件中注册我们编写好的映射文件或者是基于注解的类 -->
+	<mappers>
+		<package name="com.atguigu.mapper" />
+	</mappers>
+
+</configuration>
